@@ -1,0 +1,2 @@
+El siguiente programa simula el funcionamiento de la memoria RAM y swap.
+El método que utiliza para el reemplazo de páginas es FIFO 
