@@ -1,2 +1,5 @@
-El siguiente programa simula el funcionamiento de la memoria RAM y swap.
-El método que utiliza para el reemplazo de páginas es FIFO 
+Asignación de páginas: Los procesos solicitan páginas de memoria, 
+que son asignadas a la RAM si hay espacio disponible. Si la RAM está llena, 
+las páginas más antiguas se mueven a Swap utilizando el algoritmo FIFO.
+Reemplazo FIFO: Cuando se necesita espacio en la RAM, las páginas más antiguas 
+(las que entraron primero) son las primeras en ser movidas a Swap.
