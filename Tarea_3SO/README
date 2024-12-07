@@ -1,9 +1,100 @@
-Asignación de páginas: Los procesos solicitan páginas de memoria, 
-que son asignadas a la RAM si hay espacio disponible. Si la RAM está llena, 
-las páginas más antiguas se mueven a Swap utilizando el algoritmo FIFO.
-Reemplazo FIFO: Cuando se necesita espacio en la RAM, las páginas más antiguas 
-(las que entraron primero) son las primeras en ser movidas a Swap.
-Page Faults: Se verifica si la página solicitada se encuentra en la RAM, 
-si no está se produce page fault y el sistema mueve una página de la RAM a 
-swap para liberar espacio, para finalmente tratar de cargar la página solicitada
-a la RAM.
+Este programa simula la gestión de memoria en un sistema operativo, incluyendo la 
+asignación de páginas de memoria a procesos, la política de reemplazo FIFO 
+(First-In-First-Out) para mover páginas entre la RAM y el espacio de swap, y la 
+gestión de page faults. El objetivo es simular cómo un sistema operativo maneja la 
+memoria virtual y la física cuando los procesos requieren más memoria de la  disponible en la RAM.
+
+Conceptos Clave
+
+    Memoria RAM: Es la memoria física disponible para ejecutar los procesos. Su tamaño se especifica 
+    al inicio de la ejecución.
+    Memoria Virtual: Es la memoria que el sistema operativo emula, permitiendo que los procesos usen 
+    más memoria de la que físicamente está disponible en la RAM. El tamaño de la memoria virtual se 
+    calcula aleatoriamente dentro de un rango basado en el tamaño de la RAM.
+    Memoria Swap: Es el espacio en el disco duro que se utiliza como una extensión de la RAM cuando esta 
+    se llena. La memoria swap se asigna en función del tamaño de la memoria virtual, pero no excede un 
+    tamaño máximo definido por el sistema.
+    Page Table: Es una estructura de datos que mantiene el seguimiento de qué página de memoria está 
+    ocupada por cada proceso o si está libre o en swap.
+    Política de Reemplazo FIFO: Si no hay espacio disponible en la RAM para asignar nuevas páginas a los 
+    procesos, las páginas más antiguas (que entraron primero) son las primeras en ser movidas a swap. 
+    Esto se gestiona mediante una cola FIFO.
+
+Parámetros de Entrada
+
+    Tamaño de la Memoria Física (RAM): Especificado por el usuario, en MB. Determina la cantidad de 
+    memoria RAM disponible para los procesos.
+    Tamaño de la Página: Especificado por el usuario, en MB. Es el tamaño de cada página de memoria que se
+     asigna a los procesos.
+    Tamaño de la Memoria Virtual: Calculado aleatoriamente dentro de un rango de 1.5x a 4.5x el tamaño de 
+    la memoria física, lo que refleja cómo los sistemas operativos asignan memoria virtual.
+    Tamaño de la Memoria Swap: Calculado en función del tamaño de la memoria virtual. Si la memoria 
+    virtual es menor o igual a 2000 MB, el tamaño de la memoria swap es el doble del tamaño de la memoria 
+    virtual. Si la memoria virtual es mayor a 2000 MB, el tamaño de la memoria swap es igual al tamaño de 
+    la memoria virtual, pero no puede exceder los 8000 MB.
+
+Funciones Principales
+1. VirtualMemorySize(float PSize)
+Esta función calcula el tamaño de la memoria virtual (VMSize) de un proceso en función de su tamaño y un 
+número aleatorio generado. Asegura que el tamaño de la memoria virtual esté dentro del rango de 1.5x a 
+4.5x el tamaño de la memoria física.
+
+2. SwapMemory(float VMSize)
+Calcula el tamaño de la memoria swap en función del tamaño de la memoria virtual.
+
+3. PageTableManagment(map<int, int>& pageTable, int numeroPaginas)
+Inicializa la tabla de páginas, donde cada página de memoria se marca como libre (-1). Esto se hace solo 
+una vez durante la inicialización.
+
+4. MostrarEstadoMemoria(const map<int, int>& pageTable)
+Muestra el estado actual de la memoria física y swap. Las páginas ocupadas por procesos se muestran en la 
+RAM, y las páginas movidas a swap se muestran como tales.
+
+5. MoverPaginaASwap(map<int, int>& pageTable)
+Si la RAM está llena, esta función mueve las páginas más antiguas a la memoria swap utilizando la política 
+FIFO. Las páginas más antiguas son las primeras en salir de la RAM.
+
+6. AsignarPaginas(int id, int tamaño, map<int, int>& pageTable)
+Esta función asigna páginas de memoria a un proceso, intentando primero llenarlas en la RAM. Si la RAM se 
+llena, las páginas más antiguas se mueven a swap. Si no se pueden asignar suficientes páginas, se imprime 
+un mensaje de error.
+
+7. AccederADireccionVirtual(map<int, int>& pageTable)
+Simula un acceso a una dirección virtual aleatoria. Si la página solicitada no está en la RAM, se produce 
+un page fault y la página es movida a la memoria swap.
+
+8. FinalizarProceso(map<int, int>& pageTable)
+Finaliza un proceso aleatorio y libera las páginas que estaban siendo usadas por dicho proceso en la 
+memoria.
+
+Política de Reemplazo FIFO:
+El algoritmo de reemplazo de páginas implementado es el FIFO (First-In-First-Out), donde las páginas más 
+antiguas (las que entraron primero) son las primeras en ser movidas a la memoria swap cuando no hay 
+suficiente espacio en la RAM para nuevos procesos.
+
+Cuando se produce un page fault (o sea, cuando se intenta acceder a una página que no está en la RAM),
+el sistema verifica si hay espacio disponible en la RAM. Si no lo hay, se mueve la página más antigua de 
+la RAM a swap y se intenta cargar la página solicitada en la RAM. Esto asegura que el sistema siempre 
+tenga espacio para nuevos procesos, aunque los más antiguos pueden ser desplazados a swap.
+
+Instrucciones de Ejecución
+
+    Compila el código utilizando un compilador de C++ g++ -o memoria_simulacion memoria_simulacion.cpp
+
+Ejecuta el programa
+
+El programa te pedirá ingresar los siguientes parámetros:
+
+    Tamaño de la memoria física (RAM) en MB.
+    Tamaño de cada página en MB.
+
+El programa comenzará a simular la asignación de páginas a procesos de manera aleatoria.
+Durante la ejecución, se mostrarán los siguientes eventos
+
+    El proceso que está solicitando páginas.
+    El estado actual de la memoria RAM y swap.
+    Los page faults que ocurren si se intenta acceder a una página que no está en la RAM.
+    El movimiento de páginas entre la RAM y swap.
+    La finalización aleatoria de procesos.
+
+El programa continuará ejecutándose de manera indefinida hasta que se finalicen todos los procesos.
