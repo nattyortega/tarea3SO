@@ -3,3 +3,7 @@ que son asignadas a la RAM si hay espacio disponible. Si la RAM está llena,
 las páginas más antiguas se mueven a Swap utilizando el algoritmo FIFO.
 Reemplazo FIFO: Cuando se necesita espacio en la RAM, las páginas más antiguas 
 (las que entraron primero) son las primeras en ser movidas a Swap.
+Page Faults: Se verifica si la página solicitada se encuentra en la RAM, 
+si no está se produce page fault y el sistema mueve una página de la RAM a 
+swap para liberar espacio, para finalmente tratar de cargar la página solicitada
+a la RAM.
